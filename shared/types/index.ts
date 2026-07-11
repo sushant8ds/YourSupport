@@ -34,7 +34,7 @@ export type DownloadIntent =
 
 // ─── Tasks ───────────────────────────────────
 
-export type TaskStatus = 'pending' | 'in_progress' | 'completed' | 'deferred';
+export type TaskStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'DEFERRED';
 
 export type Importance = 1 | 2 | 3 | 4; // 1 = ⭐, 4 = ⭐⭐⭐⭐
 

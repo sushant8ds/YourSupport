@@ -1,47 +1,61 @@
+import { useState } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "react-router-dom"
 import { fetchApi } from "@/api/client"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Task } from "@shared/types"
 
 interface PlanData {
-  plan: {
+  id: string
+  availableMinutes: number
+  tasks: {
     id: string
-    availableMinutes: number
-    tasks: {
-      id: string
-      taskId: string
-      action: string
-      note: string
-      orderIndex: number
-      task: Task
-    }[]
-  }
+    taskId: string
+    action: string
+    note: string
+    orderIndex: number
+    task: Task
+  }[]
 }
 
 export function Home() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
 
-  const { data, isLoading } = useQuery<{ success: boolean; data: PlanData }>({
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [selectedLostMinutes, setSelectedLostMinutes] = useState<number | null>(null)
+
+  const { data, isLoading } = useQuery<{ success: boolean; plan: PlanData }>({
     queryKey: ['dailyPlan'],
-    queryFn: () => fetchApi('/scheduler/next'),
+    queryFn: () => fetchApi('/scheduler/plan'),
   })
 
   const replanMutation = useMutation({
-    mutationFn: () => fetchApi('/scheduler/replan', { method: 'POST' }),
+    mutationFn: (lostMinutes: number) => {
+      const now = new Date()
+      const hours = String(now.getHours()).padStart(2, '0')
+      const mins = String(now.getMinutes()).padStart(2, '0')
+      
+      return fetchApi<{ success: boolean; message: string }>('/scheduler/replan', {
+        method: 'POST',
+        body: JSON.stringify({
+          timeLostMinutes: lostMinutes,
+          currentTime: `${hours}:${mins}`,
+          sleepTime: '23:00' // Default assumption for MVP
+        })
+      })
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['dailyPlan'] })
-      alert("Plan recalculated!")
     },
   })
 
   if (isLoading) return <div className="p-8 text-center">Loading your plan...</div>
 
-  const plan = data?.data?.plan
+  const plan = data?.plan
 
-  if (!plan) {
+  if (!plan || plan.tasks.length === 0) {
     return (
       <div className="p-4 flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center">
         <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center mb-4">
@@ -58,24 +72,31 @@ export function Home() {
     )
   }
 
-  // Get next available task
   const nextTaskObj = plan.tasks.find(t => t.task.status === 'PENDING')
 
+  const handleLifeHappened = (minutes: number) => {
+    setSelectedLostMinutes(minutes)
+    replanMutation.mutate(minutes)
+  }
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false)
+    setSelectedLostMinutes(null)
+    replanMutation.reset()
+  }
+
   return (
-    <div className="p-4 space-y-6 pb-24">
-      {/* ⚡ Life Happened Button */}
+    <div className="p-4 space-y-6 pb-24 relative">
       <div className="flex justify-end">
         <Button 
           variant="outline" 
           className="border-primary/20 text-primary hover:bg-primary/10 transition-colors gap-2"
-          onClick={() => replanMutation.mutate()}
-          disabled={replanMutation.isPending}
+          onClick={() => setIsModalOpen(true)}
         >
           <span>⚡</span> Life Happened
         </Button>
       </div>
 
-      {/* Up Next Card */}
       {nextTaskObj ? (
         <Card className="border-2 border-primary/20 bg-primary/5 shadow-md">
           <CardHeader className="pb-2">
@@ -114,7 +135,6 @@ export function Home() {
         </Card>
       )}
 
-      {/* Today's Schedule Overview */}
       <div className="space-y-3 pt-6">
         <h3 className="font-semibold text-lg">Today's Flight Path</h3>
         <div className="space-y-3">
@@ -151,6 +171,48 @@ export function Home() {
           })}
         </div>
       </div>
+
+      {/* Modal Overlay */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
+          <Card className="w-full max-w-sm shadow-xl border-primary/20">
+            <CardHeader className="text-center space-y-2">
+              <div className="mx-auto bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center text-2xl mb-2">⚡</div>
+              <CardTitle className="text-xl">Life Happened</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {!replanMutation.isSuccess ? (
+                <div className="space-y-4">
+                  <p className="text-center text-muted-foreground text-sm">How much time did you lose?</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    {[15, 30, 45, 60, 90, 120].map(mins => (
+                      <Button 
+                        key={mins} 
+                        variant="outline" 
+                        onClick={() => handleLifeHappened(mins)}
+                        disabled={replanMutation.isPending}
+                        className={selectedLostMinutes === mins ? "bg-primary/10 border-primary" : ""}
+                      >
+                        {mins} min
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-6 text-center animate-in zoom-in duration-300">
+                  <div className="p-4 bg-primary/10 rounded-lg text-sm font-medium">
+                    {replanMutation.data?.message || "Plan updated."}
+                  </div>
+                  <Button className="w-full" onClick={handleCloseModal}>
+                    Got it. Let's go.
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   )
 }
+

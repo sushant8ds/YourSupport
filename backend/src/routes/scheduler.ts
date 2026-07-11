@@ -5,12 +5,16 @@ import {
   replanDay,
   getNext,
   runDecisionMode,
+  getPlan,
 } from '../controllers/schedulerController';
 
 const router = Router();
 
 // All scheduler routes require authentication
 router.use(requireAuth);
+
+// GET /api/scheduler/plan — fetch the full daily plan
+router.get('/plan', getPlan);
 
 // POST /api/scheduler/generate — generate today's plan
 router.post('/generate', generatePlan);

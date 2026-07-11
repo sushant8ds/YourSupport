@@ -264,6 +264,34 @@ export const getNext = asyncHandler(async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /api/scheduler/plan
+ * Returns the full daily plan for today, including populated tasks.
+ */
+export const getPlan = asyncHandler(async (req: Request, res: Response) => {
+  const user = await getUserByClerkId(req.clerkUserId!);
+  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const currentPlan = await prisma.dailyPlan.findUnique({
+    where: { userId_date: { userId: user.id, date: today } },
+    include: { 
+      tasks: { 
+        orderBy: { orderIndex: 'asc' },
+        include: { task: true } // Include the actual task details
+      } 
+    },
+  });
+
+  if (!currentPlan) {
+    res.json({ success: true, plan: null });
+    return;
+  }
+
+  res.json({ success: true, plan: currentPlan });
+});
+
+/**
  * POST /api/scheduler/decision-mode
  * User has X minutes — what's the best task?
  */

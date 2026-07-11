@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import schedulerRoutes from './routes/scheduler';
 import taskRoutes from './routes/tasks';
+import userRoutes from './routes/user';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();

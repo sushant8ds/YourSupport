@@ -4,8 +4,8 @@ import { Home } from './pages/Home'
 import { PlanDay } from './pages/PlanDay'
 import { DecisionMode } from './pages/DecisionMode'
 import { Timer } from './pages/Timer'
+import { History } from './pages/History'
 
-const History = () => <div className="p-4 flex h-full items-center justify-center text-muted-foreground">History coming soon...</div>
 const NotFound = () => <div className="p-4 flex h-full items-center justify-center font-bold text-xl">404 - Not Found</div>
 
 export default function App() {

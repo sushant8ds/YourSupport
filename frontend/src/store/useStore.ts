@@ -26,7 +26,7 @@ export const useStore = create<AppState>((set) => ({
   
   setActiveTask: (task) => set({ activeTask: task }),
   setTimerSecondsElapsed: (seconds) => set({ timerSecondsElapsed: seconds }),
-  setIsTimerRunning: (isRunning) => set({ isTimerRunning: isTimerRunning }),
+  setIsTimerRunning: (isRunning) => set({ isTimerRunning: isRunning }),
   incrementTimer: () => set((state) => ({ timerSecondsElapsed: state.timerSecondsElapsed + 1 })),
   resetTimer: () => set({ activeTask: null, timerSecondsElapsed: 0, isTimerRunning: false }),
 }))
