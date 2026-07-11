@@ -1,0 +1,190 @@
+// YourPilot — Prisma Schema
+// Single source of truth for the database
+// Run: npx prisma generate  →  regenerate client
+// Run: npx prisma db push   →  push to dev DB
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Enums ────────────────────────────────────────────────────
+
+enum IdentityStage {
+  EXPLORER      // Week 1
+  CONSISTENT    // Week 3 streak
+  FOCUSED       // Month 2
+  RELIABLE      // Month 4
+  UNBREAKABLE   // Month 6
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  DEFERRED
+}
+
+enum PlanAction {
+  KEEP
+  REDUCE
+  DEFER
+  DROP
+}
+
+enum SessionEventType {
+  START
+  PAUSE
+  RESUME
+  STOP
+  LIFE_HAPPENED   // ⚡ the signature event
+  COMPLETE
+}
+
+enum DownloadIntent {
+  EXAMS
+  WORK
+  FITNESS
+  PERSONAL_GROWTH
+  GETTING_STUFF_DONE
+  OTHER
+}
+
+// ─── User ─────────────────────────────────────────────────────
+
+model User {
+  id             String         @id @default(cuid())
+  clerkId        String         @unique
+  email          String         @unique
+  name           String
+  downloadIntent DownloadIntent?
+  identityStage  IdentityStage  @default(EXPLORER)
+  xp             Int            @default(0)
+  streakDays     Int            @default(0)
+  lastActiveDate DateTime?
+
+  tasks      Task[]
+  sessions   Session[]
+  dailyPlans DailyPlan[]
+  dailyStats DailyStats[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+// ─── Task ─────────────────────────────────────────────────────
+
+model Task {
+  id              String     @id @default(cuid())
+  userId          String
+  user            User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name            String     // Exactly what user typed — Pilot Engine never reads this
+  durationMinutes Int        // Estimated duration in minutes
+  importance      Int        // 1–4 (maps from ⭐ to ⭐⭐⭐⭐)
+  mustFinishToday Boolean    @default(false)
+  status          TaskStatus @default(PENDING)
+  scheduledDate   DateTime   // Which day this task belongs to
+
+  sessions        Session[]
+  plannedTasks    PlannedTask[]
+
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@map("tasks")
+}
+
+// ─── Daily Plan ───────────────────────────────────────────────
+
+model DailyPlan {
+  id               String        @id @default(cuid())
+  userId           String
+  user             User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date             DateTime      // Day this plan is for (date only, no time)
+  generatedAt      DateTime      @default(now())
+  availableMinutes Int
+  tomorrowQueue    String[]      // Array of task IDs deferred to tomorrow
+
+  tasks            PlannedTask[]
+
+  @@unique([userId, date])
+  @@map("daily_plans")
+}
+
+model PlannedTask {
+  id                  String     @id @default(cuid())
+  dailyPlanId         String
+  dailyPlan           DailyPlan  @relation(fields: [dailyPlanId], references: [id], onDelete: Cascade)
+
+  taskId              String
+  task                Task       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  action              PlanAction
+  scheduledStart      String?    // "HH:MM" format
+  scheduledEnd        String?    // "HH:MM" format
+  newDurationMinutes  Int?       // Set when action = REDUCE
+  note                String     // User-facing explanation (always positive)
+  orderIndex          Int        // Display order in the plan
+
+  @@map("planned_tasks")
+}
+
+// ─── Session (Timer) ─────────────────────────────────────────
+
+model Session {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  taskId          String
+  task            Task           @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  startedAt       DateTime
+  endedAt         DateTime?
+  durationSeconds Int            @default(0) // Actual work time (excluding pauses)
+
+  events          SessionEvent[]
+
+  createdAt       DateTime       @default(now())
+
+  @@map("sessions")
+}
+
+model SessionEvent {
+  id               String           @id @default(cuid())
+  sessionId        String
+  session          Session          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  type             SessionEventType
+  timestamp        DateTime         @default(now())
+  timeLostMinutes  Int?             // Only for LIFE_HAPPENED events
+
+  @@map("session_events")
+}
+
+// ─── Daily Stats ──────────────────────────────────────────────
+
+model DailyStats {
+  id                 String        @id @default(cuid())
+  userId             String
+  user               User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  date               DateTime
+  tasksCompleted     Int           @default(0)
+  tasksTotal         Int           @default(0)
+  minutesFocused     Int           @default(0)
+  xpEarned           Int           @default(0)
+  lifeHappenedCount  Int           @default(0) // ⚡ presses per day
+  identityStage      IdentityStage
+
+  @@unique([userId, date])
+  @@map("daily_stats")
+}
