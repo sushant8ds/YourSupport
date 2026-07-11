@@ -6,6 +6,15 @@ Format: `[VERSION] - DATE - Description`
 
 ---
 
+## [0.0.5] — July 12, 2026 — Database Connected & Neon Setup
+
+### Added
+- Real Neon PostgreSQL integration (`DATABASE_URL` configured in `backend/.env`)
+- Successful push of `prisma/schema.prisma` to database using `prisma db push`
+- Generated TypeScript Prisma Client for application models
+
+---
+
 ## [0.0.4] — July 12, 2026 — Tech Stack Locked + Project Skeleton
 
 ### Added
