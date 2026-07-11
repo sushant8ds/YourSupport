@@ -6,6 +6,15 @@ Format: `[VERSION] - DATE - Description`
 
 ---
 
+## [0.0.6] — July 12, 2026 — Task CRUD API
+
+### Added
+- Completed endpoints for Task CRUD mapping `/api/tasks` (`getTasks`, `createTask`, `updateTask`, `deleteTask`)
+- Full Zod schema validation for task creation and updates
+- Verified TypeScript compilation for newly added modules
+
+---
+
 ## [0.0.5] — July 12, 2026 — Database Connected & Neon Setup
 
 ### Added

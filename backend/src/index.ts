@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
 import schedulerRoutes from './routes/scheduler';
+import taskRoutes from './routes/tasks';
 import { errorHandler } from './middleware/errorHandler';
 
 const app = express();
@@ -31,9 +32,9 @@ app.get('/health', (req, res) => {
 // ─── Routes ───────────────────────────────────────────────────
 
 app.use('/api/scheduler', schedulerRoutes);
+app.use('/api/tasks', taskRoutes);
 
 // TODO (next sessions):
-// app.use('/api/tasks', taskRoutes);
 // app.use('/api/sessions', sessionRoutes);
 // app.use('/api/users', userRoutes);
 // app.use('/api/auth', authRoutes);
