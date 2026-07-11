@@ -30,6 +30,17 @@ export async function requireAuth(
   try {
     const authHeader = req.headers.authorization;
 
+    // ─── Local Dev Auth Bypass ──────────────────────────────
+    if (process.env.NODE_ENV === 'development' && (!authHeader || !authHeader.startsWith('Bearer '))) {
+      req.clerkUserId = 'dev_user_clerk_id';
+      
+      // We will create this user in the DB via seed script
+      // Assuming seed script creates a user with id 'dev_user_1'
+      req.userId = 'dev_user_1'; 
+      return next();
+    }
+    // ────────────────────────────────────────────────────────
+
     if (!authHeader?.startsWith('Bearer ')) {
       return next(createError('Authorization token required', 401));
     }

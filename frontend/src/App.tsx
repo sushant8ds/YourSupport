@@ -1,28 +1,29 @@
 import { Routes, Route } from 'react-router-dom'
+import { AppLayout } from './components/layout/AppLayout'
+import { Home } from './pages/Home'
+import { PlanDay } from './pages/PlanDay'
+import { DecisionMode } from './pages/DecisionMode'
+import { Timer } from './pages/Timer'
 
-// Simple placeholder components until we build out the real pages
-const Home = () => (
-  <div className="p-8">
-    <h1 className="text-3xl font-bold mb-4">YourPilot</h1>
-    <p>Stop deciding. Start doing.</p>
-  </div>
-)
-
-const NotFound = () => (
-  <div className="p-8">
-    <h1 className="text-xl font-bold">404 - Not Found</h1>
-  </div>
-)
+const History = () => <div className="p-4 flex h-full items-center justify-center text-muted-foreground">History coming soon...</div>
+const NotFound = () => <div className="p-4 flex h-full items-center justify-center font-bold text-xl">404 - Not Found</div>
 
 export default function App() {
   return (
     <div className="min-h-screen bg-background font-sans antialiased text-foreground">
-      <main className="max-w-md mx-auto min-h-screen border-x border-border shadow-sm">
+      <div className="max-w-md mx-auto min-h-screen border-x border-border shadow-sm bg-background">
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/plan" element={<PlanDay />} />
+            <Route path="/decision-mode" element={<DecisionMode />} />
+            <Route path="/history" element={<History />} />
+          </Route>
+          {/* Full-screen routes outside the bottom-nav layout */}
+          <Route path="/timer/:taskId" element={<Timer />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </main>
+      </div>
     </div>
   )
 }

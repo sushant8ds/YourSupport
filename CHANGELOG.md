@@ -6,6 +6,20 @@ Format: `[VERSION] - DATE - Description`
 
 ---
 
+## [0.0.8] — July 12, 2026 — Full Local MVP Frontend Implementation
+
+### Added
+- Local auth bypass in `backend/src/middleware/auth.ts` to skip Clerk and use a seeded DB user (`dev_user_1`) for rapid local testing.
+- Created `backend/prisma/seed.ts` and successfully seeded `dev_user_1`.
+- Built out `AppLayout` with a sticky header and mobile-first bottom navigation bar.
+- Implemented `PlanDay.tsx` for adding tasks and generating daily plans via the Pilot Engine.
+- Implemented `Home.tsx` (Dashboard) for displaying the active "Up Next" task and the full daily flight path.
+- Implemented `DecisionMode.tsx` with a timer selection grid hitting the engine's decision-mode endpoint.
+- Implemented `Timer.tsx` for the active focus session UI, including a progress ring and state managed by Zustand.
+- Manually created shadcn UI components (`Button`, `Card`, `Input`) to circumvent Node v18 CLI limitations.
+
+---
+
 ## [0.0.7] — July 12, 2026 — Frontend Setup
 
 ### Added

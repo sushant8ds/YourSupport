@@ -27,14 +27,22 @@ if (!PUBLISHABLE_KEY) {
 
 // ─── Render ───────────────────────────────────────────────────
 
+const appContent = (
+  <QueryClientProvider client={queryClient}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </QueryClientProvider>
+)
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY || 'missing_key'} afterSignOutUrl="/">
-      <QueryClientProvider client={queryClient}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </QueryClientProvider>
-    </ClerkProvider>
+    {PUBLISHABLE_KEY ? (
+      <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl="/">
+        {appContent}
+      </ClerkProvider>
+    ) : (
+      appContent
+    )}
   </React.StrictMode>,
 )
