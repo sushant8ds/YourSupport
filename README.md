@@ -123,13 +123,27 @@ YourPilot/
 
 | Layer | Technology |
 |---|---|
-| Frontend | React + Tailwind CSS |
-| Backend | Node.js + Express.js |
+| Frontend | React + **TypeScript** |
+| Styling | Tailwind CSS |
+| UI Components | shadcn/ui (owned components) |
+| State | Zustand |
+| Data Fetching | TanStack Query (React Query) |
+| Routing | React Router |
+| Backend | Node.js + Express + **TypeScript** |
+| ORM | Prisma |
 | Database | PostgreSQL |
-| Auth | Firebase Auth |
-| Scheduling | Pilot Engine (custom algorithm) |
-| Hosting | Vercel (FE) + Railway (BE) |
-| AI (V2+) | OpenAI GPT — when it's real, not before |
+| Auth | Clerk |
+| Frontend Hosting | Vercel |
+| Backend Hosting | Railway |
+| DB Hosting | Neon PostgreSQL |
+| Charts | Recharts |
+| Engine V1 | Pilot Engine (custom algorithm) |
+| AI V2+ | OpenAI / Gemini / Claude |
+| Mobile V2 | React Native |
+
+> **One language everywhere**: TypeScript on frontend, TypeScript on backend, shared types between both. Less context switching. Faster development.
+
+See full rationale → [docs/Architecture/Tech_Stack.md](docs/Architecture/Tech_Stack.md)
 
 ---
 

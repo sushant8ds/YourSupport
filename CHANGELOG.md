@@ -6,6 +6,35 @@ Format: `[VERSION] - DATE - Description`
 
 ---
 
+## [0.0.4] — July 12, 2026 — Tech Stack Locked + Project Skeleton
+
+### Added
+- `docs/Architecture/Tech_Stack.md` — full tech stack with rationale for every choice
+- `docs/Architecture/Folder_Structure.md` — complete folder map with naming conventions
+- `shared/types/index.ts` — all TypeScript types shared between frontend and backend
+- `.github/workflows/frontend-ci.yml` — GitHub Actions: type check + lint + build on PR
+- `.github/workflows/backend-ci.yml` — GitHub Actions: type check + lint + build on PR
+- `design/` folder — mockups, tokens, brand assets
+- `shared/` folder — cross-stack shared types
+
+### Tech Stack Locked
+- **Frontend**: React + TypeScript, Tailwind CSS, shadcn/ui, Zustand, TanStack Query, React Router
+- **Backend**: Node.js + Express + TypeScript, Prisma ORM
+- **Database**: PostgreSQL hosted on Neon
+- **Auth**: Clerk (replaces Firebase Auth)
+- **Hosting**: Vercel (FE) + Railway (BE)
+- **V2 Mobile**: React Native
+- **One language**: TypeScript everywhere
+
+### Design Decisions
+- Prisma ORM over raw SQL — type-safe queries, AI-friendly
+- shadcn/ui over MUI/Chakra — owned components, Tailwind-native
+- Zustand over Redux — 1KB, zero boilerplate, enough for this app
+- Clerk over Firebase Auth — better DX, one-tap Google built-in
+- Neon over Supabase — serverless Postgres with great free tier
+
+---
+
 ## [0.0.3] — July 12, 2026 — Product Philosophy Upgrade
 
 ### Changed
