@@ -6,6 +6,17 @@ Format: `[VERSION] - DATE - Description`
 
 ---
 
+## [0.0.7] — July 12, 2026 — Frontend Setup
+
+### Added
+- Complete React + TypeScript skeleton in `/frontend` using Vite
+- Configured Tailwind CSS, shadcn/ui, and generic CSS variables
+- Integrated `@tanstack/react-query`, `zustand`, `react-router-dom`
+- Added `@clerk/clerk-react` Provider wrapper
+- Set up absolute path aliases (`@/*` and `@shared/*`)
+
+---
+
 ## [0.0.6] — July 12, 2026 — Task CRUD API
 
 ### Added
