@@ -1,8 +1,10 @@
-# 🧠 Dynamic Scheduler — Core Algorithm
+# 🧠 Pilot Engine — Core Algorithm
 
-> **This is the company.** The UI can change. The backend can change. This algorithm is what YourPilot IS.
+> **This is the company.** Everything else can change. This stays.
 >
-> **Core Principle**: The algorithm works on ANY tasks the user creates. It has zero knowledge of what a task IS — only its duration, priority, and flexibility. The user is always in full control.
+> To engineers: it's the **Pilot Engine**.
+> To users: it's just **"Plan Again"**.
+> We do NOT call it AI in V1. It is a deterministic scheduling algorithm. Honest tech only.
 
 ---
 
@@ -10,35 +12,34 @@
 
 | Field | Details |
 |---|---|
-| **Feature Name** | Dynamic Scheduler |
-| **Version** | 1.0 (MVP — Pure Algorithm, No LLM) |
+| **Feature Name** | Pilot Engine |
+| **User-Facing Name** | "Plan Again" |
+| **Version** | 1.0 (Pure Algorithm — No LLM) |
 | **Priority** | CRITICAL — Build first, everything else second |
-| **Author** | YourPilot Team |
 | **Status** | Designing |
 
 ---
 
-## Purpose
+## The One Question This Engine Answers
 
-The Dynamic Scheduler is the AI brain that:
-1. Creates an **optimal daily plan** from the user's own task list and their available time
-2. **Replans in real-time** when an interruption happens
-3. Tells the user **exactly what to do next** at any given moment
+> **"What is the best thing you should do right now?"**
 
-The scheduler **does not care what the task is**. A task named "Water plants" is treated identically to a task named "Solve differential equations" — what matters is duration, priority, and flexibility as set by the user.
+Everything the Pilot Engine does flows from this question.
 
 ---
 
-## The Problem It Solves
+## Core Principle: Task-Name-Blindness
 
-Every other productivity app fails the user the moment life interrupts.
+The Pilot Engine **never reads task names**. It only operates on:
 
-**Example (fully user-defined tasks):**
-- User created: Task A (3h, Priority 1, not flexible), Task B (2h, Priority 2, flexible), Task C (1h, Priority 3, flexible)
-- User has 6 hours available
-- Something comes up → 2 hours lost
-- **Other apps**: Plan is broken. Feel guilty.
-- **YourPilot**: "No worries. Here's your new plan." ✅
+| Data | Set by |
+|---|---|
+| `duration_minutes` | User |
+| `importance` (1–4 stars) | User |
+| `must_finish_today` (bool) | User |
+| `status` (pending/done/in_progress) | System |
+
+A task named "Water plants" is treated identically to "Prepare for surgery". The engine doesn't judge what the task is — only what the user said about it.
 
 ---
 
@@ -53,39 +54,37 @@ Every other productivity app fails the user the moment life interrupts.
   },
   "tasks": [
     {
-      "id": "task_001",
-      "name": "[whatever the user typed]",
-      "estimated_duration_minutes": 180,
-      "priority": 1,
-      "is_flexible": false,
+      "id": "t001",
+      "name": "[user typed this — engine ignores it]",
+      "duration_minutes": 180,
+      "importance": 4,
+      "must_finish_today": true,
       "status": "pending"
     },
     {
-      "id": "task_002",
-      "name": "[whatever the user typed]",
-      "estimated_duration_minutes": 120,
-      "priority": 2,
-      "is_flexible": true,
+      "id": "t002",
+      "name": "[user typed this — engine ignores it]",
+      "duration_minutes": 90,
+      "importance": 3,
+      "must_finish_today": false,
       "status": "pending"
     },
     {
-      "id": "task_003",
-      "name": "[whatever the user typed]",
-      "estimated_duration_minutes": 60,
-      "priority": 3,
-      "is_flexible": true,
+      "id": "t003",
+      "name": "[user typed this — engine ignores it]",
+      "duration_minutes": 60,
+      "importance": 2,
+      "must_finish_today": false,
       "status": "pending"
     }
   ],
-  "interruption_event": {
-    "type": "time_lost",
-    "duration_lost_minutes": 120,
+  "event": {
+    "type": "interruption",
+    "time_lost_minutes": 120,
     "triggered_at": "14:00"
   }
 }
 ```
-
-> Note: The algorithm never reads the `name` field. It only uses `duration`, `priority`, `is_flexible`, and `status`. The task name is purely for display.
 
 ---
 
@@ -93,214 +92,259 @@ Every other productivity app fails the user the moment life interrupts.
 
 ```json
 {
-  "available_time_remaining_minutes": 360,
-  "scheduled_tasks": [
-    {
-      "task_id": "task_001",
-      "start": "14:00",
-      "end": "17:00",
-      "action": "keep",
-      "note": "Kept — your top priority"
-    },
-    {
-      "task_id": "task_002",
-      "action": "defer",
-      "note": "Moved to tomorrow — flexible task"
-    },
-    {
-      "task_id": "task_003",
-      "action": "drop",
-      "note": "Not enough time today — lowest priority"
-    }
+  "remaining_minutes": 300,
+  "plan": [
+    { "task_id": "t001", "action": "keep",   "note": "Most important — protected" },
+    { "task_id": "t002", "action": "reduce",  "new_duration": 60, "note": "Shortened to fit" },
+    { "task_id": "t003", "action": "defer",   "note": "Moved to tomorrow — flexible" }
   ],
-  "message": "Life happened. I kept your top priority. The flexible tasks move to tomorrow.",
-  "tomorrow_preview": ["task_002", "task_003"]
+  "message": "Life happened. You'll still finish what matters most. 💪",
+  "tomorrow_queue": ["t003"]
 }
 ```
 
 ---
 
-## 🔧 The Algorithm (Step by Step)
-
-### Phase 1: Initial Plan Generation
+## 🔧 Algorithm — Phase 1: Generate Daily Plan
 
 ```
 FUNCTION generate_daily_plan(tasks, wake_time, sleep_time):
 
-  available_minutes = (sleep_time - wake_time) in minutes
-  available_minutes -= 60  // buffer for meals, breaks, transitions
+  available_minutes = (sleep_time - wake_time) - 60   // 60 min daily buffer
 
-  // Sort by user-assigned priority (1 = highest)
-  tasks.sort_by(priority ASC)
+  // Sort: most important first, must_finish_today tasks get a boost
+  FOR each task:
+    effective_score = task.importance
+    IF task.must_finish_today: effective_score += 0.5
+
+  tasks.sort_by(effective_score DESC)
 
   plan = []
-  remaining_time = available_minutes
+  remaining = available_minutes
 
   FOR each task in tasks:
 
-    IF task.estimated_duration <= remaining_time:
+    IF task.duration <= remaining:
       plan.add(task, action="keep")
-      remaining_time -= task.estimated_duration
+      remaining -= task.duration
 
-    ELSE IF task.is_flexible == false AND remaining_time >= task.estimated_duration * 0.75:
-      // Non-flexible: reduce by up to 25%
-      reduced = task.estimated_duration * 0.75
+    ELSE IF task.must_finish_today AND remaining >= task.duration * 0.75:
+      reduced = task.duration * 0.75
       plan.add(task, action="reduce", new_duration=reduced)
-      remaining_time -= reduced
+      remaining -= reduced
 
-    ELSE IF task.is_flexible:
-      plan.add(task, action="defer")    // Move to tomorrow
+    ELSE IF NOT task.must_finish_today:
+      plan.add(task, action="defer")        // Goes to tomorrow queue
 
     ELSE:
-      plan.add(task, action="reduce", new_duration=max(remaining_time, 20min))
-      remaining_time = 0
+      // must_finish_today but can't fit — force minimum session
+      min_session = max(20, remaining)
+      plan.add(task, action="reduce", new_duration=min_session)
+      remaining = 0
       BREAK
 
-  RETURN plan
+  RETURN plan, tomorrow_queue
 ```
 
-### Phase 2: Interruption / Replan
+---
+
+## 🔧 Algorithm — Phase 2: Plan Again (Replan After ⚡ Life Happened)
 
 ```
-FUNCTION replan(current_plan, time_lost_minutes, current_time):
+FUNCTION plan_again(current_plan, time_lost, current_time):
 
-  remaining_time = (sleep_time - current_time) in minutes - 60  // buffer
+  remaining = (sleep_time - current_time) - 60    // buffer
 
-  // Only look at tasks not yet completed
-  pending_tasks = current_plan.filter(status == "pending")
+  pending = current_plan.filter(status == "pending")
 
-  // Non-flexible tasks get priority boost
-  FOR each task in pending_tasks:
-    IF task.is_flexible == false:
-      task.effective_priority = task.priority - 0.5  // bump up in ranking
+  // Re-score with must_finish_today boost
+  FOR each task in pending:
+    effective_score = task.importance
+    IF task.must_finish_today: effective_score += 0.5
 
-  pending_tasks.sort_by(effective_priority ASC)
+  pending.sort_by(effective_score DESC)
 
   new_plan = []
 
-  FOR each task in pending_tasks:
+  FOR each task in pending:
 
-    IF task.estimated_duration <= remaining_time:
+    IF task.duration <= remaining:
       new_plan.add(task, action="keep")
-      remaining_time -= task.estimated_duration
+      remaining -= task.duration
 
-    ELSE IF remaining_time >= task.estimated_duration * 0.5 AND task.is_flexible == false:
-      new_plan.add(task, action="reduce", new_duration=remaining_time)
-      remaining_time = 0
+    ELSE IF remaining >= task.duration * 0.5 AND task.must_finish_today:
+      new_plan.add(task, action="reduce", new_duration=remaining)
+      remaining = 0
       BREAK
 
-    ELSE IF task.is_flexible:
-      new_plan.add(task, action="defer")    // Tomorrow
+    ELSE IF NOT task.must_finish_today:
+      new_plan.add(task, action="defer")
 
     ELSE:
-      // Non-flexible, not enough time — force a partial session
-      new_plan.add(task, action="reduce", new_duration=max(remaining_time, 20min))
-      remaining_time = 0
+      // must_finish_today, barely any time left
+      force_min = max(20, remaining)
+      new_plan.add(task, action="reduce", new_duration=force_min)
+      remaining = 0
       BREAK
 
   RETURN new_plan
 ```
 
-### Phase 3: "What Should I Do Now?"
+---
+
+## 🔧 Algorithm — Phase 3: "What Should I Do Now?"
 
 ```
-FUNCTION get_next_task(current_plan, current_time):
+FUNCTION get_next_task(plan, current_time):
 
-  // Check for any in-progress task first
-  in_progress = current_plan.find(status == "in_progress")
-  IF in_progress EXISTS: RETURN in_progress
+  // First: any in-progress task
+  in_progress = plan.find(status == "in_progress")
+  IF in_progress: RETURN in_progress
 
-  // Find next pending task scheduled for now or overdue
-  pending = current_plan
-    .filter(status == "pending")
-    .sort_by(scheduled_start_time ASC)
+  // Second: highest importance pending task
+  pending = plan
+    .filter(status == "pending" AND action != "defer")
+    .sort_by(importance DESC, must_finish_today DESC)
 
-  IF pending IS EMPTY:
-    RETURN { message: "All done! Add more tasks or rest." }
+  IF pending.empty:
+    RETURN { message: "All done for today! Add more or rest." }
 
   RETURN pending.first()
 ```
 
 ---
 
+## 🔧 Algorithm — Phase 4: Decision Mode
+
+```
+FUNCTION decision_mode(available_minutes, plan):
+
+  // Filter tasks that can fit in available_minutes
+  candidates = plan
+    .filter(status == "pending")
+    .filter(duration <= available_minutes + 10)   // 10 min tolerance
+    .sort_by(importance DESC)
+
+  IF candidates.empty:
+    best = plan.filter(status == "pending").sort_by(importance DESC).first()
+    RETURN {
+      task: best,
+      note: "This won't fit perfectly, but it's your most important remaining task"
+    }
+
+  best = candidates.first()
+  RETURN {
+    task: best,
+    fits_in: best.duration,
+    message: "This fits perfectly in your time."
+  }
+```
+
+---
+
 ## 📐 Business Rules
 
-| Rule | Description |
+| Rule | Spec |
 |---|---|
-| **Priority 1 tasks** | NEVER dropped — only reduced by max 25% |
-| **Priority 2 tasks** | Can be reduced up to 30% or deferred |
-| **Priority 3–4 tasks** | Can be deferred or dropped freely |
-| **Non-flexible tasks** | Can NOT move to tomorrow — only time-reduced |
-| **Flexible tasks** | Can always be deferred to tomorrow |
-| **Minimum session** | Never schedule less than 20 minutes for any task |
-| **Buffer time** | Always reserve 60 min/day for life (meals, breaks) |
-| **Overload guard** | Warn user if total task time > 10h in a day |
-| **Guilt-free rule** | NEVER show negative messaging — always show recovery |
-| **Name-blindness** | Algorithm ignores task names — treats all tasks equally |
+| ⭐⭐⭐⭐ tasks (importance 4) | NEVER dropped — max 25% reduction only |
+| ⭐⭐⭐ tasks (importance 3) | Can be reduced up to 30% or deferred |
+| ⭐⭐ tasks (importance 2) | Can be deferred freely |
+| ⭐ tasks (importance 1) | Can be dropped today if time runs out |
+| `must_finish_today = true` | Cannot move to tomorrow — only reduced |
+| `must_finish_today = false` | Can always defer to tomorrow |
+| Minimum session | Never schedule less than 20 minutes |
+| Daily buffer | Always reserve 60 min (meals, life, transitions) |
+| Overload guard | Warn user if total tasks > 10 hours in one day |
+| Language rule | NEVER show guilt. Always show recovery path. |
+| Name rule | Engine never reads or uses task name in logic |
 
 ---
 
 ## 🚨 Edge Cases
 
-| Scenario | How We Handle It |
+| Scenario | Response |
 |---|---|
-| User has 0 tasks | Show empty state: "Add your first task to get started" |
-| User adds 20 tasks (more than a day can fit) | Schedule top-priority ones, defer rest, warn user |
-| User wakes up late | Shorter day → only Priority 1 & 2 tasks fit |
-| ALL tasks are non-flexible | Reduce durations proportionally across all |
-| User gets interrupted 5+ times | Show: "Tough day? Want to just do ONE task?" |
-| Time lost > all remaining time | End-of-day mode: "You gave it your best. Rest up." |
-| User pauses timer immediately (< 5 min) | Don't replan — treat as a short break |
-| Task duration > whole remaining day | Warn during task creation, suggest splitting |
-| User finishes faster than estimated | "Bonus time! Start the next task?" |
-| User is consistently late (detected pattern) | Suggest: "Should I add 20% buffer to your estimates?" |
-| User has 0 priority-1 tasks | Treat highest user priority as protected |
+| 0 tasks | Empty state: "What do you want to get done today?" |
+| All tasks are `must_finish_today` | Reduce durations proportionally, warn user |
+| Time lost > all remaining time | "Tough day. You gave it your best. Rest up." |
+| User presses ⚡ after only 5 min | Treat as short break, don't replan yet |
+| Task duration > full day | Warn during creation: "This might need to be split across days" |
+| User finishes faster than estimated | "Bonus time! Tap to start your next task." |
+| User interrupted 5+ times in one day | "Tough day? Want to just do ONE thing for 30 minutes?" |
+| Pattern: user skips same task repeatedly | (V2) Surface insight: "Want to move this to a different time?" |
 
 ---
 
 ## 🖥️ What the User Sees
 
-### Home Screen (Zero presets, purely user tasks)
+### Home Screen
 ```
-📅 Monday, July 12
-Good morning! 👋
+What should you do right now?
 
-🎯 Today's Plan
-━━━━━━━━░░░░░░░ 33%
+╔══════════════════════════════╗
+║  [Their Task Name]  ⭐⭐⭐⭐   ║
+║  2h remaining                ║
+╚══════════════════════════════╝
+  [ ▶ Start ]   [ ⚡ Life Happened ]
 
-[Task Name A]    Priority 1  •  3h left   [In Progress]
-[Task Name B]    Priority 2  •  2h        [Pending]
-[Task Name C]    Priority 3  •  1h        [Flexible]
-
-[▶ Continue A]   [🔀 What now?]
+Today: 2 done · 3 remaining
+🌱 Explorer · Day 5
 ```
-> Task names are EXACTLY what the user typed. No labels, no icons assigned by app.
 
-### Replan Screen (After interruption)
+### Plan Again Screen (after ⚡)
 ```
-⚡ Life happened. I've got a new plan.
+⚡ Life happened.
+Here's your new plan:
 
-Original           New
-──────────         ──────────
-[Task A]  3h  →   [Task A]  3h   ✓ Kept
-[Task B]  2h  →   [Task B]  2h   📅 Tomorrow
-[Task C]  1h  →   [Task C]  ---  ❌ Today's done
+Before             After
+─────────────────────────────
+[Task A]  ⭐⭐⭐⭐  →  ✓ Kept  (most important)
+[Task B]  ⭐⭐⭐   →  ✂ Shorter  (fits now)
+[Task C]  ⭐⭐    →  📅 Tomorrow  (flexible)
+[Task D]  ⭐     →  ❌ Today done  (lowest)
 
-"You'll still finish your #1 priority. That's a win. 💪"
+"You'll still finish what matters most. 💪"
 
-[✓ Looks Good]   [✏️ Let me Adjust]
+[ ✓ Looks Good ]   [ ✏️ Adjust ]
 ```
 
 ---
 
-## 📈 Future Scope (V2+)
+## 📈 V2: Predictive Layer (Post-MVP)
 
-1. **Pattern Learning**: "You usually underestimate your first task. Want me to add a buffer?"
-2. **Energy Awareness**: Schedule intensive tasks in user's peak hours
-3. **LLM Integration**: Replace algorithm with GPT for more nuanced, conversational replanning
-4. **Calendar Awareness**: Detect meetings and auto-plan around them
-5. **Mood Input**: "Feeling tired today?" → Reorder tasks to lighter ones first
+In V2, the Pilot Engine gains memory and pattern detection:
+
+```
+Pattern Storage:
+  - Task skip history
+  - Time-of-day completion patterns
+  - Consistent duration underestimates
+
+Prediction Examples:
+
+  "I noticed you usually don't finish [task type] on Mondays.
+   Want me to move it to Tuesday?"
+
+  "You always finish your first task faster than estimated.
+   Should I adjust your estimates automatically?"
+
+  "You work best between 9–11 AM based on your history.
+   Want me to schedule your most important task there?"
+```
+
+The predictive layer SUGGESTS. It never silently changes anything. The user always confirms.
 
 ---
 
-*Status: Ready for implementation | Version: 1.0 Algorithm*
+## 🔮 V3: LLM Integration (When It's Real)
+
+In V3, we replace parts of the algorithm with GPT for:
+- More conversational replan explanations
+- Understanding context ("I have a headache today")
+- Nuanced scheduling decisions
+
+**We will announce this clearly** when it happens. We don't call it AI before then.
+
+---
+
+*Status: Algorithm designed. Ready to implement. | Version: 1.0*

@@ -1,12 +1,17 @@
 # 👤 02 — User Journey
 
-## Primary User: "Ambitious but Overwhelmed"
+## Who Is YourPilot For?
 
-**Name**: Any person with their own goals — a student, a freelancer, an entrepreneur, a professional.
-**Situation**: Has multiple things they want to accomplish each day. Life keeps interrupting.
-**Pain**: Plans their day every morning, but one interruption destroys everything. Ends up feeling guilty and unproductive.
+**Everyone with goals and an unpredictable life.**
 
-> **Key insight**: YourPilot does NOT know what their tasks are. The user brings their own life to the app.
+- A student preparing for exams
+- A doctor managing continuing education
+- A freelancer juggling multiple clients
+- A gym trainer tracking their own growth
+- A business owner with daily chaos
+- A parent squeezing productivity into small windows
+
+YourPilot doesn't know what they're working on. It doesn't need to. It only knows what the user tells it: what matters, how long it takes, and whether it must happen today.
 
 ---
 
@@ -16,74 +21,102 @@
 DAY 1 — FIRST OPEN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Splash Screen
+  "Stop deciding. Start doing."
+  [ Start ]
   ↓
-Onboarding (2 questions only)
-  → "When do you wake up?" → user picks time
-  → "When do you sleep?"   → user picks time
+Google Login (one tap)
   ↓
-Signup (Google or Email)
+Intent Question (skippable)
+  "Why did you download YourPilot today?"
+  → User picks or skips
   ↓
 Empty Dashboard
-  → "No tasks yet. Add your first task."
-  → + Add Task button (prominent)
+  "What do you want to get done today?"
+  [ + Add Your First Task ]
   ↓
-User Creates Their Own Tasks
-  → They type whatever matters to them
-  → They set duration, priority, flexibility
-  → App learns nothing about WHAT the tasks are
+User creates their own tasks (no prompts, no examples)
+  → Types: whatever they want
+  → Sets: duration (time picker), importance (stars), must finish today (YES/NO)
   ↓
-AI Generates Daily Plan
-  → "Here's your plan for today!"
-  → Plan is based purely on user's task data
+Pilot Engine generates today's plan
   ↓
-Home Dashboard
-  → Sees their own tasks scheduled
-  → Progress bar: 0%
-  → "Start [first task]" button
+Home Screen
+  "What should you do right now?"
+  → Shows first task prominently
+  → [ ▶ Start ]  [ ⚡ Life Happened ]
 
 
 TYPICAL DAY — NORMAL FLOW
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Morning: Opens app → Sees today's plan (all user-created tasks)
+Opens app → Home screen answers: "What now?"
   ↓
-Taps "Start [Task Name]"
+Taps [ ▶ Start ]
   ↓
-Timer starts (countdown set to their estimated duration)
+Timer begins (their estimated duration)
   ↓
-Works for their planned time
+Works. Timer counts down.
   ↓
-Finishes → Marks complete → +XP animation 🎉
+Done → taps Stop → ✅ completion animation
   ↓
-Moves to next task automatically
+Home updates: next task surfaces automatically
   ↓
-End of day: "X/Y tasks done! 🔥 Streak: N days"
-  → All X and Y numbers = user's own tasks
+End of day:
+  "X done today. Day N. You're building something real."
+  Identity badge progress shown
 
 
 INTERRUPTION DAY — THE WOW MOMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Something comes up → User taps "I got interrupted"
+Something comes up.
+
+User taps: ⚡ Life Happened
   ↓
-"How much time did you lose?" → user inputs time
+"How much time did you lose?"
+  [ 15 min ]  [ 30 min ]  [ 1h ]  [ 2h+ ]
   ↓
-AI Replan screen:
-  "No worries. Here's your new plan:"
-  ✓ [Their Task A] — Kept (it's Priority 1)
-  ✂ [Their Task B] — Reduced by 30 min
-  📅 [Their Task C] — Moved to tomorrow (flexible)
-  ❌ [Their Task D] — Dropped today (lowest priority)
+Plan Again screen:
+  Before          After
+  ────────────────────────────
+  [Task A] ⭐⭐⭐⭐ → ✓ Kept (most important)
+  [Task B] ⭐⭐⭐  → ✂ Shorter (reduced)
+  [Task C] ⭐⭐   → 📅 Tomorrow (flexible)
+  [Task D] ⭐    → ❌ Today done (lowest)
+
+  "You'll still finish what matters most. 💪"
   ↓
-User taps "Looks good" or adjusts manually
+[ ✓ Looks Good ] or [ ✏️ Adjust ]
   ↓
-Continues with updated plan
-  ↓
-End of day: "You handled a tough day. Still got your top priority done. +XP"
+Continues with new plan, no guilt
 
 
-STREAKS & MOMENTUM
+DECISION MODE — THE MAGICAL MOMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Day 7:  "🔥 7-day streak! Whatever you're working on — keep going."
-Day 30: "🏆 30-day consistency badge unlocked!"
+User has 30 unexpected free minutes.
+
+Opens app → taps "I have some time"
+  ↓
+"How much time do you have?"
+  [ 15 min ]  [ 30 min ]  [ 1 hour ]  [ 2+ hours ]
+  ↓
+User taps [ 30 min ]
+  ↓
+  "Best thing to do right now:"
+  ╔══════════════════════════╗
+  ║  [Their Task Name]       ║
+  ║  ⭐⭐⭐  •  Fits in 28 min ║
+  ╚══════════════════════════╝
+  [ ▶ Start ]   [ Show other options ]
+  ↓
+User starts. Zero decisions made.
+
+
+IDENTITY GROWTH — THE LONG GAME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Day 1–7:   🌱 Explorer
+Day 21:    🔄 Consistent  ("You showed up 3 weeks in a row.")
+Month 2:   🎯 Focused     ("You've been doing this for 2 months.")
+Month 4:   🧱 Reliable    ("People can count on you. Including yourself.")
+Month 6:   🗿 Unbreakable ("6 months. You are the system now.")
 ```
 
 ---
@@ -92,8 +125,21 @@ Day 30: "🏆 30-day consistency badge unlocked!"
 
 | Moment | Without YourPilot | With YourPilot |
 |---|---|---|
-| Plan falls apart | 😣 Guilty, defeated | 💪 "AI has a new plan" |
-| Missed a task | 😔 Broken streak | 😌 "Recovery mode — just do 1 thing" |
-| Completed a day | 😑 Moved on | 🎉 XP, streak, celebration |
-| Opened app | 😰 "What do I do today?" | 😊 "AI already planned it" |
-| Adding tasks | 😑 Forced into preset categories | 😊 "I can add anything I want" |
+| Opening the app | 😰 "What should I do?" | 😊 App already tells you |
+| Life interrupts | 😣 Guilty, plan is broken | 💪 One tap → new plan |
+| Missed a task | 😔 Broken streak | 😌 "Recovery mode — just do one thing" |
+| Creating a task | 😑 Filling confusing forms | 😊 3 questions, in plain language |
+| End of a hard day | 😤 "I barely did anything" | 🏆 "You still finished what mattered most" |
+| Week 3 | 😶 Another app I'm not using | 🔄 "I'm becoming consistent" |
+
+---
+
+## What Users Will Say (Target Quotes)
+
+> *"I stopped thinking about what to do next. The app just tells me."*
+
+> *"I pressed Life Happened 3 times this week. Still got my most important thing done every day."*
+
+> *"It doesn't judge me. It just replans."*
+
+> *"I've been Consistent for 3 weeks. That's the longest I've ever stuck with anything."*

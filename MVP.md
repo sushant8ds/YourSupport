@@ -1,132 +1,197 @@
 # 🎯 YourPilot — MVP Definition
 
-> **The MVP Question**: If Google said "You have 14 days to build this" — what exactly would we build?
+> **The 14-Day Question**: What do we build if we only had 14 days?
 
 ---
 
-## The Golden Rule for MVP
+## The Two Rules for MVP
 
-> Ship the ONE thing that makes people say *"Oh wow, I've never seen a productivity app do this before."*
+**Rule 1**: The ⚡ "Life Happened" button must exist and must work perfectly. That IS the product.
 
-That one thing = **Dynamic Scheduler** (AI Replanning when life happens)
-
-And the second rule: **The user defines everything. Zero hardcoded tasks, zero preset categories, zero assumptions.**
+**Rule 2**: Every screen must reduce a decision the user has to make — not add one.
 
 ---
 
-## ✅ MVP Screens (14-Day Build)
+## ✅ MVP Screens
 
-### Screen 1: Splash / Onboarding (1 screen)
-- App name + tagline
-- "Life Changes. Your Plan Should Too."
-- Get Started button
+### Screen 1: Splash / Welcome (1 screen)
+- App name: **YourPilot**
+- Tagline: *"Stop deciding. Start doing."*
+- One button: **"Start"** (no Login text, no Signup text — just "Start")
 
-### Screen 2: Login / Signup (1 screen)
-- Email login
-- Google login
-- Forgot password link
+### Screen 2: Login (1 screen)
+- **Google Login** (one tap — primary)
+- Email option (secondary, smaller)
+- Zero other content — no taglines, no feature lists
+- After login → straight to dashboard
 
-### Screen 3: Onboarding Questions (1 screen)
-- "When do you usually wake up?"
-- "When do you sleep?"
-- That's it — **no asking about goals or work type** (user will add their own tasks)
+### Screen 3: Onboarding — Intent Question (1 screen, skippable)
+- *"Why did you download YourPilot today?"*
+- Options: 📚 Exams / Studying · 💼 Work / Career · 🏋️ Health & Fitness · 🧠 Personal Growth · ✅ Getting stuff done · 🌟 Something else
+- Skip button visible — this is optional
+- Purpose: personalizes empty state copy only. Nothing else.
+- **Does NOT ask for wake time, sleep time, or goal type**
 
-### Screen 4: Home / Dashboard (1 screen — the most important)
-- Today's date + greeting
-- Daily Mission summary (AI-generated from USER's own tasks)
-- Progress bar (e.g., "2/5 tasks done" — all tasks user-created)
-- Current XP + streak counter
-- "What should I do now?" button
-- If no tasks yet → prompt: "Add your first task to get started"
+### Screen 4: Dashboard / Home (1 screen — the most important)
+
+**Primary (above the fold):**
+- *"What should you do right now?"*
+- The ONE next task — large, prominent
+- **▶ Start** button
+- **⚡ Life Happened** button (always visible, always accessible)
+
+**Secondary (below the fold / smaller):**
+- Today's progress (e.g., "2 done · 3 remaining")
+- Identity badge (e.g., 🌱 Explorer — Day 4)
+
+**Empty state (no tasks yet):**
+- *"What do you want to get done today?"*
+- Giant **+ Add Task** button
+- Nothing else — no tips, no examples, no suggestions
 
 ### Screen 5: Task List (1 screen)
-- List of all user-created tasks for today
-- Each card: Name (user-set), Duration (user-set), Priority (user-set), Status
-- **Empty state**: "No tasks yet. Add one below." — never show example tasks
-- + Add Task button (prominent)
+- All user-created tasks for today
+- Each card: Task name, duration, importance stars, status
+- **+ Add Task** button
+- Empty state: *"Nothing here yet. Add your first task."*
+- Never shows example tasks or suggested tasks
 
-### Screen 6: Create / Edit Task (1 screen)
-- Task name — **free text, user types anything they want**
-- Estimated duration — user picks
-- Priority — user picks 1-4 (or High/Medium/Low/Optional)
-- Flexible? — user picks Yes/No
-  - Yes = AI can defer this to tomorrow
-  - No = AI must keep it today
-- Optional note — free text
-- **No category dropdown, no preset types** — user names their own tasks freely
+### Screen 6: Create Task (1 screen — redesigned UX)
 
-### Screen 7: Timer (1 screen — second most important)
-- Task name at top (exactly as user typed it)
-- Big countdown clock
-- Start / Pause / Stop buttons
-- **"I got interrupted" button** → triggers AI replan
-- Progress ring animation
+```
+What do you want to do?
+[ Free text input — user types anything ]
 
-### Screen 8: AI Replan Screen (1 screen — the WOW screen)
-- "Life happened. Let me replan your day."
-- Shows: What changed and why — based only on user's tasks and their priorities
-- Accept / Modify buttons
-- Always positive, recovery-focused tone
+How long will it take?
+[ 15 min ]  [ 30 min ]  [ 1h ]  [ 2h ]  [ 3h ]  [ 4h+ ]
 
-### Screen 9: Daily Progress / End of Day (1 screen)
-- X/Y tasks completed (all user-created tasks)
-- Time focused
-- XP earned today
-- Streak counter
-- Tomorrow's preview (top tasks from user's backlog)
+How important is this?
+  ⭐  ⭐⭐  ⭐⭐⭐  ⭐⭐⭐⭐
 
-### Screen 10: Profile / Stats (1 screen)
-- Total XP
-- Streak
-- Tasks completed this week
-- Simple weekly bar chart
+Must this get done today?
+  [ YES ]  [ NO ]
+
+[ Add Task ]
+```
+
+**What these map to internally:**
+- ⭐ = Priority 4 · ⭐⭐ = Priority 3 · ⭐⭐⭐ = Priority 2 · ⭐⭐⭐⭐ = Priority 1
+- YES = `is_flexible: false` · NO = `is_flexible: true`
+
+**Words banned from this screen**: Priority, Flexibility, Duration, Schedule
+
+### Screen 7: Timer (1 screen)
+- Task name (exactly as user typed) — large, at top
+- Big countdown timer — prominent
+- **Pause** / **Stop** buttons
+- **⚡ Life Happened** button — always visible here too (this is where users need it most)
+- "Session started at [time]" in small gray text
+
+### Screen 8: Plan Again / Replan (1 screen — THE WOW screen)
+
+Triggered by: ⚡ Life Happened button
+
+```
+⚡ Life happened.
+How much time did you lose?
+[ 15 min ]  [ 30 min ]  [ 1h ]  [ 2h+ ]
+
+──────────────────────────────
+Before             After
+──────────────────────────────
+[Task A]  ⭐⭐⭐⭐  → ✓ Kept  (most important)
+[Task B]  ⭐⭐⭐   → ✂ Shorter  (reduced by 30 min)
+[Task C]  ⭐⭐    → 📅 Tomorrow  (flexible)
+[Task D]  ⭐     → ❌ Today's done  (lowest)
+──────────────────────────────
+"You'll still finish what matters most. 💪"
+
+[ ✓ Looks Good ]   [ Adjust ]
+```
+
+**Design rules:**
+- Show importance stars (not priority numbers) — user's own language
+- Always end with a positive, recovery-focused message
+- "Adjust" option lets user drag/reorder if needed
+
+### Screen 9: Decision Mode (1 screen — the magical feature)
+
+Accessible via: "I have some time" button on home screen
+
+```
+How much time do you have?
+[ 15 min ]  [ 30 min ]  [ 1 hour ]  [ 2+ hours ]
+
+        ↓  (user taps 30 min)
+
+Best thing to do right now:
+╔══════════════════════════╗
+║  [Their Task Name]       ║
+║  ⭐⭐⭐  •  Fits in 28 min ║
+╚══════════════════════════╝
+
+[ ▶ Start ]   [ Show other options ]
+```
+
+### Screen 10: End of Day / Daily Summary (1 screen)
+- Tasks done: X of Y
+- Time focused: Xh Ym
+- Identity: *"Day 12. You're building something real."*
+- Identity badge progress bar (toward next stage)
+- Tomorrow preview: top 2 tasks from backlog
+- **[ See you tomorrow ]** button
+
+### Screen 11: Profile / Identity (1 screen)
+- Current identity stage: 🌱 Explorer → 🔄 Consistent → 🎯 Focused → 🧱 Reliable → 🗿 Unbreakable
+- Days active / streak
+- Tasks completed this week (simple bar chart)
+- XP (shown here, not on home screen)
 
 ---
 
 ## 🚫 What's NOT in MVP
 
-### Features to skip:
+### Features:
 - ❌ AI Coach (V2)
-- ❌ GPS verification (V2)
-- ❌ Social features (V3)
-- ❌ Voice input (V3)
+- ❌ Pattern detection / predictions (V2)
+- ❌ GPS / photo verification (V2)
 - ❌ Calendar sync (V3)
-- ❌ Reports & analytics (V2)
-- ❌ Friends / Challenges (V3)
+- ❌ Friends / social (V3)
+- ❌ Voice input (V3)
 
-### Anti-patterns to NEVER build:
-- ❌ **Preset task templates** — user starts fresh, always
-- ❌ **Suggested tasks** — we don't know what they should work on
-- ❌ **Default categories** (Study / Work / Health) — user can create their own labels if needed
-- ❌ **Daily task limits** — user decides how much they take on
-- ❌ **Productivity scores** — we don't judge, we just help
+### Anti-patterns (never build these):
+- ❌ Preset task suggestions or templates
+- ❌ "Suggested tasks" based on intent from onboarding
+- ❌ Default categories (Study/Work/Health)
+- ❌ Asking for wake/sleep time during onboarding
+- ❌ XP as the primary reward on the home screen
+- ❌ Any negative or guilt-inducing language
+- ❌ Calling it AI when it's an algorithm
 
 ---
 
 ## 📊 MVP Success Metrics
 
-After launch, MVP is a **success** if:
-1. User opens the app **3+ days in a row** after install
-2. User creates **at least 3 tasks on their own** without guidance
-3. User uses the **"I got interrupted" button** at least once
-4. User says *"The replan was actually helpful"*
-5. At least **70% of users complete at least 1 task** in their first session
+MVP is a success if, after first week of live users:
+1. **70%** of users add at least 1 task in their first session
+2. **At least 1 user per day** presses ⚡ Life Happened
+3. **40%** open the app 3+ days in a row after install
+4. **0** users complain "I didn't understand what to do"
+5. **At least 5 users** say something like *"the replan was actually helpful"*
 
 ---
 
-## 🛠️ MVP Tech Decisions
+## 🛠️ Tech Decisions
 
 | Decision | Choice | Why |
 |---|---|---|
-| Frontend | React (Web) | Faster to build than native app |
-| Styling | Tailwind CSS | Fast, consistent UI |
-| Backend | Node.js + Express | Simple, fast APIs |
-| Database | PostgreSQL | Reliable for relational data |
-| Auth | Firebase Auth | Zero setup, trusted |
-| AI Engine | Custom algorithm (V1) | Full control + no API cost |
-| Hosting | Vercel + Railway | Free tier sufficient for MVP |
-
-> **Note on AI**: For MVP, the Dynamic Scheduler is a **pure algorithm** (no LLM). We add real AI/LLM in V2 for the coaching layer.
+| Platform | React Web (PWA) | Fastest to build + works on all devices |
+| Styling | Tailwind CSS | Consistent, fast |
+| Backend | Node.js + Express | Simple REST API |
+| Database | PostgreSQL | Task/user relational data fits perfectly |
+| Auth | Firebase Auth | One-tap Google login |
+| Scheduling Engine | Custom algorithm | Full control, no API cost, honest |
+| Hosting | Vercel + Railway | Free tier, deploy in minutes |
 
 ---
 

@@ -1,111 +1,135 @@
 # 🗺️ YourPilot — Product Roadmap
 
-> **Philosophy**: Ship small, ship fast, learn from users, iterate.
-> Every version is a complete, working product — not a half-built mess.
->
-> **Core Principle**: Users define everything. No preset tasks, no forced categories, no assumptions about what they should work on.
+> **Guiding Question for every feature**: Does this reduce a decision the user has to make?
+> If no → don't build it.
 
 ---
 
 ## ✅ Version 1 — The Core Loop (MVP)
-**Goal**: Prove the Dynamic Scheduler works and people love it.
+**Goal**: Prove that ⚡ "Life Happened" + Pilot Engine changes how people experience productivity.
 **Timeline**: 4 weeks
 
 ### 🔐 Authentication
-- [ ] Login (Email + Google)
-- [ ] Signup / Registration
-- [ ] Forgot Password
+- [ ] Google Login (one tap — primary)
+- [ ] Email login (secondary)
 
 ### 🏠 Home / Dashboard
-- [ ] Today's Mission (AI-generated daily plan based on user's own tasks)
-- [ ] Progress bar (tasks done vs total — all user-created)
-- [ ] Current XP and streak counter
+- [ ] Answers ONE question: *"What should you do right now?"*
+- [ ] Single prominent next task + Start button
+- [ ] ⚡ Life Happened button — always visible
+- [ ] Secondary: daily progress, identity badge
+- [ ] Empty state: no suggestions, just "+ Add Task"
 
-### 📝 Task Management (Fully User-Defined)
-- [ ] Create Task — user sets: name, duration, priority, flexibility, category (optional, user-named)
-- [ ] Edit Task
-- [ ] Delete Task
-- [ ] Mark Task Complete
-- [ ] No preset tasks, no templates, no suggestions — blank canvas
+### 📝 Task Creation (Plain Language UX)
+- [ ] *"What do you want to do?"* → free text
+- [ ] *"How long will it take?"* → time picker (15m, 30m, 1h, 2h, 3h, 4h+)
+- [ ] *"How important is this?"* → ⭐ to ⭐⭐⭐⭐ (star tap)
+- [ ] *"Must this get done today?"* → YES / NO
+- [ ] Edit and delete tasks
+- [ ] No categories, no labels, no presets
 
 ### ⏱️ Timer
-- [ ] Start Timer
-- [ ] Pause Timer
-- [ ] Stop Timer
-- [ ] "I got interrupted" button → triggers AI replan
-- [ ] Timer notification when session ends
+- [ ] Start / Pause / Stop
+- [ ] ⚡ Life Happened always accessible from timer screen
+- [ ] Progress display
 
-### 🧠 AI Dynamic Scheduler (The Engine)
-- [ ] Initial daily plan generated from user's task list + their available hours
-- [ ] Real-time replan when user reports time lost
-- [ ] Priority-based rescheduling (user-assigned priorities, not AI-assumed)
-- [ ] "What should I do now?" button
+### ⚡ Pilot Engine — Plan Again
+- [ ] Phase 1: Generate daily plan from user's tasks
+- [ ] Phase 2: Replan after interruption (the WOW feature)
+- [ ] Phase 3: "What now?" — surfaces next best task
+- [ ] Phase 4: Decision Mode — pick task by available time
 
-### 🏆 Rewards System
-- [ ] XP system (earn XP for completing any task the user created)
-- [ ] Streak counter
-- [ ] Daily mission completion badge
+### 🕐 Decision Mode
+- [ ] "I have some time" entry on home screen
+- [ ] Time picker: 15 / 30 / 60 / 120 min
+- [ ] Instant best-task recommendation
+- [ ] "Show other options" fallback
+
+### 🏆 Identity System (replaces XP as primary reward)
+- [ ] 🌱 Explorer (Week 1)
+- [ ] 🔄 Consistent (Week 3 streak)
+- [ ] 🎯 Focused (Month 2)
+- [ ] 🧱 Reliable (Month 4)
+- [ ] 🗿 Unbreakable (Month 6)
+- [ ] XP still tracked (used for progress within stages)
+
+### 📋 Onboarding
+- [ ] Splash: "Stop deciding. Start doing." + Start button
+- [ ] Google login (one tap)
+- [ ] Intent question: "Why did you download YourPilot?" (skippable)
+- [ ] Straight to dashboard — no wake time, no sleep time, no goal-type questions
 
 ---
 
-## 🚀 Version 2 — The Coach
-**Goal**: Make YourPilot feel like a personal mentor, not just a tool.
+## 🚀 Version 2 — The Pilot Gets Smarter
+**Goal**: Make YourPilot feel like it actually knows you.
 **Timeline**: Month 2
 
-### 🤖 AI Coach
-- [ ] Weekly performance analysis based on user's own tasks
-- [ ] Personalized insights from user's patterns (not generic advice)
-- [ ] Suggestions like "You work best between 9–11 AM" based on real data
+### 🔮 Predictive Pilot Engine
+- [ ] Pattern detection: tasks user skips repeatedly
+- [ ] Duration calibration: "You usually take longer — want me to adjust?"
+- [ ] Peak-hour detection: when user completes tasks most often
+- [ ] All predictions shown as suggestions — user always confirms
 
-### 📊 Reports & Analytics
-- [ ] Daily/Weekly/Monthly productivity graphs
+### 🤖 AI Coach (now actually using AI)
+- [ ] Integrate GPT for conversational replan explanations
+- [ ] Weekly insights: "Here's what I noticed about your week"
+- [ ] Context-aware: "You said you have a headache — want lighter tasks?"
+
+### 📊 Reports & Insights
+- [ ] Daily / weekly / monthly completion charts
 - [ ] Most productive time-of-day heatmap
-- [ ] Task completion rate over time
-- [ ] XP growth chart
+- [ ] Identity growth timeline
+- [ ] Longest streaks
 
-### ✅ Verification Mode
-- [ ] Photo proof for tasks (optional, user-enabled per task)
-- [ ] Location check-in (optional GPS)
-- [ ] Manual check-in for offline tasks
-
-### 🔔 Smart Notifications
-- [ ] Morning briefing: "Here's your plan for today"
-- [ ] Idle alert: "You haven't started yet — want to replan?"
-- [ ] Evening summary: "You completed X/Y tasks. Great job!"
+### 🔔 Smart Nudges (minimal, non-annoying)
+- [ ] Morning: "Here's your plan. Tap to start."
+- [ ] Idle: "Haven't started yet — want a quick replan?"
+- [ ] Evening: "X done today. Well played."
 
 ---
 
 ## 🌟 Version 3 — The Social Layer
-**Goal**: Make productivity social and competitive.
+**Goal**: Make consistency social without turning it into a competition.
 **Timeline**: Month 3+
 
-### 🗣️ AI Voice
-- [ ] Voice input for creating tasks ("Add a 2-hour task called...")
+### 🗣️ Voice
+- [ ] "Add a 2-hour task called..." voice input
 - [ ] Voice daily briefing
-- [ ] "Hey YourPilot, what should I do now?"
+- [ ] "Hey YourPilot, what should I do?" voice command
 
 ### 📅 Calendar Integration
 - [ ] Google Calendar sync
-- [ ] Auto-block task time in calendar
+- [ ] Auto-block task time
 - [ ] Import calendar events as tasks
 
-### 👥 Friends & Community
+### 👥 Friends
 - [ ] Add friends
-- [ ] See friends' streak and XP (no task details shared)
-- [ ] Friend leaderboard
+- [ ] See their identity stage and streak (no task details shared)
+- [ ] Simple encouragement system ("Tell them they're doing great")
 
 ### 🏟️ Challenges
 - [ ] 7-Day Consistency Challenge
-- [ ] 30-Day Streak
-- [ ] XP Battles with friends
+- [ ] 30-Day streak goals
+- [ ] Identity races (who becomes Reliable first)
 
 ---
 
-## 💡 Icebox (Future Ideas — Not Committed)
+## 💡 Icebox
 - [ ] Browser extension (block distractions during timer)
-- [ ] Wearable integration (Apple Watch)
-- [ ] Team/group productivity mode
+- [ ] Apple Watch integration
 - [ ] Offline mode
+- [ ] Team / shared task mode
+
+---
+
+## ❌ Things We Will NOT Build
+- Preset task templates
+- Suggested tasks based on user profile
+- AI that judges your productivity
+- Push notifications that guilt you
+- Leaderboards that shame low performers
+- Any feature that adds a decision instead of removing one
 
 ---
 
