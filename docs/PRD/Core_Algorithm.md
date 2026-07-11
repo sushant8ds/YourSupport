@@ -1,6 +1,8 @@
 # 🧠 Dynamic Scheduler — Core Algorithm
 
-> **This is the company.** The UI can change. The backend can change. This algorithm is what StudyPilot AI IS.
+> **This is the company.** The UI can change. The backend can change. This algorithm is what YourPilot IS.
+>
+> **Core Principle**: The algorithm works on ANY tasks the user creates. It has zero knowledge of what a task IS — only its duration, priority, and flexibility. The user is always in full control.
 
 ---
 
@@ -11,7 +13,7 @@
 | **Feature Name** | Dynamic Scheduler |
 | **Version** | 1.0 (MVP — Pure Algorithm, No LLM) |
 | **Priority** | CRITICAL — Build first, everything else second |
-| **Author** | StudyPilot AI Team |
+| **Author** | YourPilot Team |
 | **Status** | Designing |
 
 ---
@@ -19,9 +21,11 @@
 ## Purpose
 
 The Dynamic Scheduler is the AI brain that:
-1. Creates an **optimal daily plan** from a user's task list and available time
+1. Creates an **optimal daily plan** from the user's own task list and their available time
 2. **Replans in real-time** when an interruption happens
 3. Tells the user **exactly what to do next** at any given moment
+
+The scheduler **does not care what the task is**. A task named "Water plants" is treated identically to a task named "Solve differential equations" — what matters is duration, priority, and flexibility as set by the user.
 
 ---
 
@@ -29,88 +33,89 @@ The Dynamic Scheduler is the AI brain that:
 
 Every other productivity app fails the user the moment life interrupts.
 
-Example:
-- You planned: DSA (4h), Resume (2h), Gym (1h), Reading (1h) = 8h of work
-- Friend arrives at 2 PM → 2 hours wasted
-- Now you only have 6 hours left
-- **Other apps**: Your plan is broken. You feel guilty.
-- **StudyPilot AI**: "No worries. Here's your new plan." ✅
+**Example (fully user-defined tasks):**
+- User created: Task A (3h, Priority 1, not flexible), Task B (2h, Priority 2, flexible), Task C (1h, Priority 3, flexible)
+- User has 6 hours available
+- Something comes up → 2 hours lost
+- **Other apps**: Plan is broken. Feel guilty.
+- **YourPilot**: "No worries. Here's your new plan." ✅
 
 ---
 
 ## Inputs
 
-```
-User Data:
-  - wake_time: "07:00"
-  - sleep_time: "23:00"
-  - current_time: "14:00" (dynamic)
-
-Task List:
-  [
+```json
+{
+  "user": {
+    "wake_time": "07:00",
+    "sleep_time": "23:00",
+    "current_time": "14:00"
+  },
+  "tasks": [
     {
-      id: 1,
-      name: "DSA Practice",
-      estimated_duration: 240,  // minutes
-      priority: 1,              // 1 = highest
-      is_flexible: false,       // cannot be moved to tomorrow
-      category: "study",
-      status: "pending"
+      "id": "task_001",
+      "name": "[whatever the user typed]",
+      "estimated_duration_minutes": 180,
+      "priority": 1,
+      "is_flexible": false,
+      "status": "pending"
     },
     {
-      id: 2,
-      name: "Resume Update",
-      estimated_duration: 120,
-      priority: 2,
-      is_flexible: false,
-      category: "work",
-      status: "pending"
+      "id": "task_002",
+      "name": "[whatever the user typed]",
+      "estimated_duration_minutes": 120,
+      "priority": 2,
+      "is_flexible": true,
+      "status": "pending"
     },
     {
-      id: 3,
-      name: "Gym",
-      estimated_duration: 60,
-      priority: 3,
-      is_flexible: true,        // can be moved to tomorrow
-      category: "health",
-      status: "pending"
-    },
-    {
-      id: 4,
-      name: "Reading",
-      estimated_duration: 60,
-      priority: 4,
-      is_flexible: true,
-      category: "personal",
-      status: "pending"
+      "id": "task_003",
+      "name": "[whatever the user typed]",
+      "estimated_duration_minutes": 60,
+      "priority": 3,
+      "is_flexible": true,
+      "status": "pending"
     }
-  ]
-
-Interruption Event:
-  - type: "time_lost"
-  - duration_lost: 120   // minutes
-  - reason: "friend_visit"  // optional context
-  - triggered_at: "14:00"
+  ],
+  "interruption_event": {
+    "type": "time_lost",
+    "duration_lost_minutes": 120,
+    "triggered_at": "14:00"
+  }
+}
 ```
+
+> Note: The algorithm never reads the `name` field. It only uses `duration`, `priority`, `is_flexible`, and `status`. The task name is purely for display.
 
 ---
 
 ## Outputs
 
-```
-Replan Result:
-  {
-    "available_time_remaining": 360,  // minutes
-    "scheduled_tasks": [
-      { "task_id": 1, "start": "14:00", "end": "18:00", "action": "keep" },
-      { "task_id": 2, "start": "18:00", "end": "19:30", "action": "reduce", "note": "Reduced from 2h to 1.5h" },
-      { "task_id": 3, "action": "defer", "note": "Moved to tomorrow" },
-      { "task_id": 4, "action": "drop", "note": "Dropped for today — not critical" }
-    ],
-    "message": "Life happened. I replanned your day. DSA stays (it's your top priority). Resume is trimmed to 1.5h. Gym moves to tomorrow.",
-    "xp_impact": -10,   // small XP penalty for lost time (not punishing, just honest)
-    "tomorrow_preview": ["Gym", "Leftover Resume"]
-  }
+```json
+{
+  "available_time_remaining_minutes": 360,
+  "scheduled_tasks": [
+    {
+      "task_id": "task_001",
+      "start": "14:00",
+      "end": "17:00",
+      "action": "keep",
+      "note": "Kept — your top priority"
+    },
+    {
+      "task_id": "task_002",
+      "action": "defer",
+      "note": "Moved to tomorrow — flexible task"
+    },
+    {
+      "task_id": "task_003",
+      "action": "drop",
+      "note": "Not enough time today — lowest priority"
+    }
+  ],
+  "message": "Life happened. I kept your top priority. The flexible tasks move to tomorrow.",
+  "tomorrow_preview": ["task_002", "task_003"]
+}
 ```
 
 ---
@@ -121,87 +126,99 @@ Replan Result:
 
 ```
 FUNCTION generate_daily_plan(tasks, wake_time, sleep_time):
-  
-  available_minutes = (sleep_time - wake_time) * 60
-  available_minutes -= 60  // subtract buffer time (meals, breaks, transitions)
-  
-  // Sort tasks by priority (1 is highest)
-  tasks.sort_by(priority)
-  
+
+  available_minutes = (sleep_time - wake_time) in minutes
+  available_minutes -= 60  // buffer for meals, breaks, transitions
+
+  // Sort by user-assigned priority (1 = highest)
+  tasks.sort_by(priority ASC)
+
   plan = []
   remaining_time = available_minutes
-  
+
   FOR each task in tasks:
+
     IF task.estimated_duration <= remaining_time:
-      plan.add(task)
+      plan.add(task, action="keep")
       remaining_time -= task.estimated_duration
-    ELSE IF task.is_flexible == false:
-      // Must include — reduce duration by up to 25%
-      reduced_duration = task.estimated_duration * 0.75
-      IF reduced_duration <= remaining_time:
-        plan.add(task, duration=reduced_duration, note="Time reduced")
-        remaining_time -= reduced_duration
-    // else: skip task, defer to tomorrow
-  
-  RETURN plan, tomorrow_deferrals
+
+    ELSE IF task.is_flexible == false AND remaining_time >= task.estimated_duration * 0.75:
+      // Non-flexible: reduce by up to 25%
+      reduced = task.estimated_duration * 0.75
+      plan.add(task, action="reduce", new_duration=reduced)
+      remaining_time -= reduced
+
+    ELSE IF task.is_flexible:
+      plan.add(task, action="defer")    // Move to tomorrow
+
+    ELSE:
+      plan.add(task, action="reduce", new_duration=max(remaining_time, 20min))
+      remaining_time = 0
+      BREAK
+
+  RETURN plan
 ```
 
-### Phase 2: Interruption Handling (The Replan)
+### Phase 2: Interruption / Replan
 
 ```
-FUNCTION replan(current_plan, time_lost, current_time):
-  
-  // Step 1: Calculate what time is actually left
-  remaining_time = (sleep_time - current_time) * 60 - 60  // minus buffer
-  
-  // Step 2: Get only pending tasks (not completed ones)
+FUNCTION replan(current_plan, time_lost_minutes, current_time):
+
+  remaining_time = (sleep_time - current_time) in minutes - 60  // buffer
+
+  // Only look at tasks not yet completed
   pending_tasks = current_plan.filter(status == "pending")
-  
-  // Step 3: Sort by priority, then by flexibility
+
   // Non-flexible tasks get priority boost
   FOR each task in pending_tasks:
     IF task.is_flexible == false:
-      task.effective_priority = task.priority - 0.5  // bump up
-  
-  pending_tasks.sort_by(effective_priority)
-  
-  // Step 4: Fit tasks into remaining time
+      task.effective_priority = task.priority - 0.5  // bump up in ranking
+
+  pending_tasks.sort_by(effective_priority ASC)
+
   new_plan = []
-  
+
   FOR each task in pending_tasks:
+
     IF task.estimated_duration <= remaining_time:
       new_plan.add(task, action="keep")
       remaining_time -= task.estimated_duration
-    ELSE IF remaining_time > task.estimated_duration * 0.5:
-      // Can fit at least half the task
+
+    ELSE IF remaining_time >= task.estimated_duration * 0.5 AND task.is_flexible == false:
       new_plan.add(task, action="reduce", new_duration=remaining_time)
       remaining_time = 0
       BREAK
+
     ELSE IF task.is_flexible:
-      new_plan.add(task, action="defer")   // move to tomorrow
+      new_plan.add(task, action="defer")    // Tomorrow
+
     ELSE:
-      new_plan.add(task, action="reduce", new_duration=remaining_time * 0.7)
+      // Non-flexible, not enough time — force a partial session
+      new_plan.add(task, action="reduce", new_duration=max(remaining_time, 20min))
       remaining_time = 0
       BREAK
-  
+
   RETURN new_plan
 ```
 
-### Phase 3: "What Should I Do Now?" 
+### Phase 3: "What Should I Do Now?"
 
 ```
 FUNCTION get_next_task(current_plan, current_time):
-  
-  // Find any in-progress task first
+
+  // Check for any in-progress task first
   in_progress = current_plan.find(status == "in_progress")
-  IF in_progress: RETURN in_progress
-  
-  // Else find next pending task
-  pending = current_plan.filter(status == "pending")
-  IF pending.empty: RETURN "All done! Rest or add more tasks."
-  
-  next_task = pending.sort_by(scheduled_start_time).first()
-  RETURN next_task
+  IF in_progress EXISTS: RETURN in_progress
+
+  // Find next pending task scheduled for now or overdue
+  pending = current_plan
+    .filter(status == "pending")
+    .sort_by(scheduled_start_time ASC)
+
+  IF pending IS EMPTY:
+    RETURN { message: "All done! Add more tasks or rest." }
+
+  RETURN pending.first()
 ```
 
 ---
@@ -210,15 +227,16 @@ FUNCTION get_next_task(current_plan, current_time):
 
 | Rule | Description |
 |---|---|
-| **Priority 1 tasks** | NEVER dropped. Only reduced by max 25% |
-| **Priority 2 tasks** | Can be reduced by max 30% or deferred to tomorrow |
-| **Priority 3-4 tasks** | Can be deferred or dropped freely |
-| **Non-flexible tasks** | Cannot be moved to tomorrow — only reduced |
+| **Priority 1 tasks** | NEVER dropped — only reduced by max 25% |
+| **Priority 2 tasks** | Can be reduced up to 30% or deferred |
+| **Priority 3–4 tasks** | Can be deferred or dropped freely |
+| **Non-flexible tasks** | Can NOT move to tomorrow — only time-reduced |
 | **Flexible tasks** | Can always be deferred to tomorrow |
 | **Minimum session** | Never schedule less than 20 minutes for any task |
-| **Buffer time** | Always reserve 60 min/day for meals/breaks |
-| **Overload protection** | Never schedule more than 10 hours of tasks in a day |
-| **Guilt-free rule** | Never show negative messaging. Always show recovery path |
+| **Buffer time** | Always reserve 60 min/day for life (meals, breaks) |
+| **Overload guard** | Warn user if total task time > 10h in a day |
+| **Guilt-free rule** | NEVER show negative messaging — always show recovery |
+| **Name-blindness** | Algorithm ignores task names — treats all tasks equally |
 
 ---
 
@@ -226,58 +244,62 @@ FUNCTION get_next_task(current_plan, current_time):
 
 | Scenario | How We Handle It |
 |---|---|
-| User has 0 tasks | Show "Add your first task" onboarding |
-| User has 20 tasks in one day | Cap at 10h, defer rest to tomorrow |
-| User wakes up at 2 PM | Shorter day → only Priority 1 & 2 tasks |
+| User has 0 tasks | Show empty state: "Add your first task to get started" |
+| User adds 20 tasks (more than a day can fit) | Schedule top-priority ones, defer rest, warn user |
+| User wakes up late | Shorter day → only Priority 1 & 2 tasks fit |
 | ALL tasks are non-flexible | Reduce durations proportionally across all |
-| User keeps getting interrupted (5+ times) | Show "Tough day? Want to just do ONE thing?" |
-| Time lost > remaining time | End-of-day mode: "You gave it your best. Rest up." |
-| User pauses timer immediately | Treat as 5 min lost, don't replan yet |
-| Task duration exceeds available day | Warn user during task creation |
-| User completes task faster than estimated | Add freed time to next task or show "Bonus time!" |
-| User is always late (pattern detection) | Suggest: "Should I add 20% buffer to your estimates?" |
+| User gets interrupted 5+ times | Show: "Tough day? Want to just do ONE task?" |
+| Time lost > all remaining time | End-of-day mode: "You gave it your best. Rest up." |
+| User pauses timer immediately (< 5 min) | Don't replan — treat as a short break |
+| Task duration > whole remaining day | Warn during task creation, suggest splitting |
+| User finishes faster than estimated | "Bonus time! Start the next task?" |
+| User is consistently late (detected pattern) | Suggest: "Should I add 20% buffer to your estimates?" |
+| User has 0 priority-1 tasks | Treat highest user priority as protected |
 
 ---
 
-## 🖥️ UI (What the User Sees)
+## 🖥️ What the User Sees
 
-### Normal State (Home Screen)
+### Home Screen (Zero presets, purely user tasks)
 ```
-📅 Today: Monday, July 12
+📅 Monday, July 12
+Good morning! 👋
 
-🎯 Your Mission
-━━━━━━━━━━━━░░░░░░ 45%
+🎯 Today's Plan
+━━━━━━━━░░░░░░░ 33%
 
-📚 DSA Practice       Priority 1   2h left
-📝 Resume Update      Priority 2   2h
-🏋️ Gym               Priority 3   1h
+[Task Name A]    Priority 1  •  3h left   [In Progress]
+[Task Name B]    Priority 2  •  2h        [Pending]
+[Task Name C]    Priority 3  •  1h        [Flexible]
 
-[▶ Start DSA]  [🔀 What should I do now?]
+[▶ Continue A]   [🔀 What now?]
 ```
+> Task names are EXACTLY what the user typed. No labels, no icons assigned by app.
 
-### After Interruption
+### Replan Screen (After interruption)
 ```
 ⚡ Life happened. I've got a new plan.
 
-Before           After
-──────────────   ──────────────
-DSA     4h   →  DSA     4h   ✓ Kept (Priority 1)
-Resume  2h   →  Resume  1.5h ✂ Reduced
-Gym     1h   →  Gym     ---  📅 Tomorrow
-Reading 1h   →  Reading ---  ❌ Dropped today
+Original           New
+──────────         ──────────
+[Task A]  3h  →   [Task A]  3h   ✓ Kept
+[Task B]  2h  →   [Task B]  2h   📅 Tomorrow
+[Task C]  1h  →   [Task C]  ---  ❌ Today's done
 
-[✓ Looks good]  [✏️ Let me adjust]
+"You'll still finish your #1 priority. That's a win. 💪"
+
+[✓ Looks Good]   [✏️ Let me Adjust]
 ```
 
 ---
 
 ## 📈 Future Scope (V2+)
 
-1. **Pattern Learning**: "You always underestimate DSA. Want me to auto-add 30 min?"
-2. **Energy Awareness**: "Schedule deep work in morning, light tasks in evening"
-3. **LLM Integration**: Replace pure algorithm with GPT for more nuanced replanning
+1. **Pattern Learning**: "You usually underestimate your first task. Want me to add a buffer?"
+2. **Energy Awareness**: Schedule intensive tasks in user's peak hours
+3. **LLM Integration**: Replace algorithm with GPT for more nuanced, conversational replanning
 4. **Calendar Awareness**: Detect meetings and auto-plan around them
-5. **Mood Input**: "Feeling tired today?" → Switch to light-task mode
+5. **Mood Input**: "Feeling tired today?" → Reorder tasks to lighter ones first
 
 ---
 

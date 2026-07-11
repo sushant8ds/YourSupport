@@ -1,7 +1,9 @@
-# 🗺️ StudyPilot AI — Product Roadmap
+# 🗺️ YourPilot — Product Roadmap
 
 > **Philosophy**: Ship small, ship fast, learn from users, iterate.
 > Every version is a complete, working product — not a half-built mess.
+>
+> **Core Principle**: Users define everything. No preset tasks, no forced categories, no assumptions about what they should work on.
 
 ---
 
@@ -15,43 +17,45 @@
 - [ ] Forgot Password
 
 ### 🏠 Home / Dashboard
-- [ ] Today's Mission (AI-generated daily plan)
-- [ ] Progress bar (tasks done vs total)
+- [ ] Today's Mission (AI-generated daily plan based on user's own tasks)
+- [ ] Progress bar (tasks done vs total — all user-created)
 - [ ] Current XP and streak counter
 
-### 📝 Task Management
-- [ ] Create Task (name, duration, priority, flexibility)
+### 📝 Task Management (Fully User-Defined)
+- [ ] Create Task — user sets: name, duration, priority, flexibility, category (optional, user-named)
 - [ ] Edit Task
 - [ ] Delete Task
 - [ ] Mark Task Complete
+- [ ] No preset tasks, no templates, no suggestions — blank canvas
 
 ### ⏱️ Timer
 - [ ] Start Timer
 - [ ] Pause Timer
 - [ ] Stop Timer
+- [ ] "I got interrupted" button → triggers AI replan
 - [ ] Timer notification when session ends
 
 ### 🧠 AI Dynamic Scheduler (The Engine)
-- [ ] Initial daily plan generation based on tasks + available hours
-- [ ] Real-time replan when user pauses or marks time lost
-- [ ] Priority-based rescheduling algorithm
+- [ ] Initial daily plan generated from user's task list + their available hours
+- [ ] Real-time replan when user reports time lost
+- [ ] Priority-based rescheduling (user-assigned priorities, not AI-assumed)
 - [ ] "What should I do now?" button
 
 ### 🏆 Rewards System
-- [ ] XP system (earn XP for completing tasks)
-- [ ] Streak counter (days in a row with at least 1 task done)
+- [ ] XP system (earn XP for completing any task the user created)
+- [ ] Streak counter
 - [ ] Daily mission completion badge
 
 ---
 
 ## 🚀 Version 2 — The Coach
-**Goal**: Make StudyPilot feel like a personal mentor, not just a tool.
+**Goal**: Make YourPilot feel like a personal mentor, not just a tool.
 **Timeline**: Month 2
 
 ### 🤖 AI Coach
-- [ ] Weekly performance analysis
-- [ ] Personalized tips based on user patterns
-- [ ] "You work best at 9AM — want to schedule deep work then?" suggestions
+- [ ] Weekly performance analysis based on user's own tasks
+- [ ] Personalized insights from user's patterns (not generic advice)
+- [ ] Suggestions like "You work best between 9–11 AM" based on real data
 
 ### 📊 Reports & Analytics
 - [ ] Daily/Weekly/Monthly productivity graphs
@@ -60,14 +64,14 @@
 - [ ] XP growth chart
 
 ### ✅ Verification Mode
-- [ ] Photo proof for tasks (e.g., gym selfie)
-- [ ] Location check-in (optional GPS for gym, library)
+- [ ] Photo proof for tasks (optional, user-enabled per task)
+- [ ] Location check-in (optional GPS)
 - [ ] Manual check-in for offline tasks
 
 ### 🔔 Smart Notifications
 - [ ] Morning briefing: "Here's your plan for today"
 - [ ] Idle alert: "You haven't started yet — want to replan?"
-- [ ] Evening summary: "You completed 4/6 tasks today. Great job!"
+- [ ] Evening summary: "You completed X/Y tasks. Great job!"
 
 ---
 
@@ -76,23 +80,23 @@
 **Timeline**: Month 3+
 
 ### 🗣️ AI Voice
-- [ ] Voice input for creating tasks
+- [ ] Voice input for creating tasks ("Add a 2-hour task called...")
 - [ ] Voice daily briefing
-- [ ] "Hey StudyPilot, what should I do now?"
+- [ ] "Hey YourPilot, what should I do now?"
 
 ### 📅 Calendar Integration
 - [ ] Google Calendar sync
-- [ ] Auto-block study time in calendar
-- [ ] Import events as tasks
+- [ ] Auto-block task time in calendar
+- [ ] Import calendar events as tasks
 
 ### 👥 Friends & Community
 - [ ] Add friends
-- [ ] See friends' streak and XP (no details, just encouragement)
+- [ ] See friends' streak and XP (no task details shared)
 - [ ] Friend leaderboard
 
 ### 🏟️ Challenges
 - [ ] 7-Day Consistency Challenge
-- [ ] 30-Day Study Streak
+- [ ] 30-Day Streak
 - [ ] XP Battles with friends
 
 ---
@@ -100,7 +104,6 @@
 ## 💡 Icebox (Future Ideas — Not Committed)
 - [ ] Browser extension (block distractions during timer)
 - [ ] Wearable integration (Apple Watch)
-- [ ] AI-generated study notes
 - [ ] Team/group productivity mode
 - [ ] Offline mode
 

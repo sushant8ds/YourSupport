@@ -2,9 +2,11 @@
 
 ## Primary User: "Ambitious but Overwhelmed"
 
-**Name**: Arjun, 21  
-**Situation**: Engineering student, preparing for placements, going to gym, has a freelance project  
-**Pain**: Plans his day every morning, but one interruption destroys the whole plan. He ends up watching YouTube at 10 PM feeling guilty.
+**Name**: Any person with their own goals — a student, a freelancer, an entrepreneur, a professional.
+**Situation**: Has multiple things they want to accomplish each day. Life keeps interrupting.
+**Pain**: Plans their day every morning, but one interruption destroys everything. Ends up feeling guilty and unproductive.
+
+> **Key insight**: YourPilot does NOT know what their tasks are. The user brings their own life to the app.
 
 ---
 
@@ -15,78 +17,72 @@ DAY 1 — FIRST OPEN
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Splash Screen
   ↓
-Onboarding
-  → "When do you wake up?" → 7:00 AM
-  → "When do you sleep?" → 11:00 PM
-  → "What's your main goal?" → Study + Health
+Onboarding (2 questions only)
+  → "When do you wake up?" → user picks time
+  → "When do you sleep?"   → user picks time
   ↓
-Signup (Google)
+Signup (Google or Email)
   ↓
-Add First Tasks
-  → DSA: 4h, Priority 1, Not flexible
-  → Resume: 2h, Priority 2, Not flexible
-  → Gym: 1h, Priority 3, Flexible
-  → Reading: 1h, Priority 4, Flexible
+Empty Dashboard
+  → "No tasks yet. Add your first task."
+  → + Add Task button (prominent)
+  ↓
+User Creates Their Own Tasks
+  → They type whatever matters to them
+  → They set duration, priority, flexibility
+  → App learns nothing about WHAT the tasks are
   ↓
 AI Generates Daily Plan
-  → "Here's your plan for today, Arjun!"
+  → "Here's your plan for today!"
+  → Plan is based purely on user's task data
   ↓
 Home Dashboard
-  → Sees his 4 tasks scheduled
+  → Sees their own tasks scheduled
   → Progress bar: 0%
-  → "Start DSA" button visible
+  → "Start [first task]" button
 
 
 TYPICAL DAY — NORMAL FLOW
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Morning: Opens app → Sees today's plan
+Morning: Opens app → Sees today's plan (all user-created tasks)
   ↓
-Taps "Start DSA"
+Taps "Start [Task Name]"
   ↓
-Timer starts (4 hour countdown)
+Timer starts (countdown set to their estimated duration)
   ↓
-Studies for 2 hours
+Works for their planned time
   ↓
-Pauses timer → [Pause reason optional]
+Finishes → Marks complete → +XP animation 🎉
   ↓
-Resumes → finishes DSA
+Moves to next task automatically
   ↓
-Marks complete → +100 XP animation 🎉
-  ↓
-Timer auto-starts for Resume
-  ↓
-Completes Resume → +60 XP
-  ↓
-Gym → +30 XP
-  ↓
-End of day screen: "4/4 tasks done! 🔥 Streak: 3 days"
+End of day: "X/Y tasks done! 🔥 Streak: N days"
+  → All X and Y numbers = user's own tasks
 
 
 INTERRUPTION DAY — THE WOW MOMENT
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-2 PM: Friend calls → Arjun taps "I got interrupted" (or pauses timer)
+Something comes up → User taps "I got interrupted"
   ↓
-"How much time did you lose?" → 2 hours
+"How much time did you lose?" → user inputs time
   ↓
-AI Replan screen appears:
+AI Replan screen:
   "No worries. Here's your new plan:"
-  ✓ DSA: Still 2h remaining — kept (Priority 1)
-  ✂ Resume: Reduced to 1.5h (was 2h)
-  📅 Gym: Moved to tomorrow (flexible)
-  ❌ Reading: Dropped today (Priority 4)
+  ✓ [Their Task A] — Kept (it's Priority 1)
+  ✂ [Their Task B] — Reduced by 30 min
+  📅 [Their Task C] — Moved to tomorrow (flexible)
+  ❌ [Their Task D] — Dropped today (lowest priority)
   ↓
-Arjun taps "Looks good"
+User taps "Looks good" or adjusts manually
   ↓
 Continues with updated plan
   ↓
-Completes DSA + Resume (reduced)
-  ↓
-End of day: "3/4 tasks done. Tough day handled well! +80 XP"
+End of day: "You handled a tough day. Still got your top priority done. +XP"
 
 
 STREAKS & MOMENTUM
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Day 7: "🔥 7-day streak! You're on a roll."
+Day 7:  "🔥 7-day streak! Whatever you're working on — keep going."
 Day 30: "🏆 30-day consistency badge unlocked!"
 ```
 
@@ -94,9 +90,10 @@ Day 30: "🏆 30-day consistency badge unlocked!"
 
 ## Emotional Journey
 
-| Moment | Old Feeling | StudyPilot Feeling |
+| Moment | Without YourPilot | With YourPilot |
 |---|---|---|
 | Plan falls apart | 😣 Guilty, defeated | 💪 "AI has a new plan" |
 | Missed a task | 😔 Broken streak | 😌 "Recovery mode — just do 1 thing" |
 | Completed a day | 😑 Moved on | 🎉 XP, streak, celebration |
 | Opened app | 😰 "What do I do today?" | 😊 "AI already planned it" |
+| Adding tasks | 😑 Forced into preset categories | 😊 "I can add anything I want" |
